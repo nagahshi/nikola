@@ -19,6 +19,8 @@ MYSQL_HOST=localhost #host de seu banco de dados
 MYSQL_USER=root #usuario de acesso ao seu banco de dados
 MYSQL_PASSWORD=root #sua senha para acesso ao banco de dados
 MYSQL_DATABASE=database #nome de seu banco de dados
+
+RESTIFY_NON_BLOCK=['/auth/login','/auth/register'] #Rotas que não serão bloqueadas pelo middleware de JWT
 ```
 >Nota: Ainda não possuímos um sistema de migração de dados portanto seu banco de dados deve estar pronto.
 
