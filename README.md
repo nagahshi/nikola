@@ -132,3 +132,10 @@ class Controller extends skelController{
 
 module.exports = Controller
 ```
+### Autenticação ou JWT
+Utilizamos a biblioteca jsonwebtoken para geração de token com o modelo JWT.
+Para criar um token de autenticação use a biblioteca auth em api/config/auth.js, que criará um token padrão
+```
+// após importá-la use auth e passe seu objeto para criação de seu token
+auth({email, telefone, id})
+```
