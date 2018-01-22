@@ -6,6 +6,7 @@ const server = require('./config/server')
  *  APPLY SERVER TO REGISTER ROUTES
  */
 
+require('./domains/user').applyRoutes(server)
 
 //listener server at port
 server.listen(process.env.API_PORT)

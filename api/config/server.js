@@ -10,7 +10,7 @@ server.use(cors.actual)
 server.use(restify.plugins.bodyParser())
 server.use(restify.plugins.queryParser({ mapParams: false }));
 
-const exclusions = ['/auth/login']
+const exclusions = process.env.RESTIFY_NON_BLOCK
 
 server.use(jwtMiddleware({ exclusions }))
 

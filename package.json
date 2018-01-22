@@ -1,5 +1,5 @@
 {
-  "name": "nikola",
+  "name": "nikola-api",
   "version": "1.0.0",
   "description": "create a simple and fast API with JWT using nodejs :D",
   "main": "api/index.js",
