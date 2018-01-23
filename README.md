@@ -4,7 +4,7 @@
 ### Instalação
 Para usar o Nikola como sua API, execute:
 ```
-git clone ou npm i nikola-api
+git clone
 ```
 ### Configuração
 Após a cópia e instalação de dependências crie o arquivo de variáveis ammbiente e configure com seus dados
