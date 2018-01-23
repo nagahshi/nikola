@@ -1,5 +1,5 @@
 # NIKOLA
-> Nikola é uma base para API feita em Nodejs, implementação simples do ActiveRecord para trabalhar com seu banco de dados mysql e autenticação com JWT.
+> Nikola é uma base para Restful API feita em Nodejs, implementação simples do ActiveRecord para trabalhar com seu banco de dados mysql e autenticação com JWT.
 
 ### Instalação
 Para usar o Nikola como sua API, execute:
