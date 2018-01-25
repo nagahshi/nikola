@@ -1,11 +1,11 @@
-const Router     = require('restify-router').Router
+const Router = require('restify-router').Router
 const Controller = require('./controller')
-const router     = new Router()
+const router = new Router()
 let defaultRoute = 'user'
 
 let InstanceController = new Controller()
 
-router.get(`/${defaultRoute}`, async (req,res,next) => {
+router.get(`/${defaultRoute}`, async (req, res, next) => {
   try {
     res.send(await InstanceController.index(req))
     next()
@@ -15,7 +15,7 @@ router.get(`/${defaultRoute}`, async (req,res,next) => {
   }
 })
 
-router.post(`/auth/register`, async (req,res,next) => {
+router.post(`/auth/register`, async (req, res, next) => {
   try {
     res.send(await InstanceController.store(req))
     next()
@@ -25,7 +25,7 @@ router.post(`/auth/register`, async (req,res,next) => {
   }
 })
 
-router.get(`/${defaultRoute}/:id`, async (req,res,next) => {
+router.get(`/${defaultRoute}/:id`, async (req, res, next) => {
   try {
     res.send(await InstanceController.show(req))
     next()
@@ -35,7 +35,7 @@ router.get(`/${defaultRoute}/:id`, async (req,res,next) => {
   }
 })
 
-router.put(`/${defaultRoute}/:id`, async(req, res, next) => {
+router.put(`/${defaultRoute}/:id`, async (req, res, next) => {
   try {
     res.send(await InstanceController.update(req))
     next()
@@ -45,7 +45,7 @@ router.put(`/${defaultRoute}/:id`, async(req, res, next) => {
   }
 })
 
-router.post(`/auth/login`, async(req, res, next) => {
+router.post(`/auth/login`, async (req, res, next) => {
   try {
     res.send(await InstanceController.authenticate(req))
     next()
@@ -53,6 +53,6 @@ router.post(`/auth/login`, async(req, res, next) => {
     res.send(error)
     next()
   }
-});
+})
 
-module.exports = router;
+module.exports = router

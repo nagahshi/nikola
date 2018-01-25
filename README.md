@@ -100,7 +100,7 @@ Após instanciado o modelo adota métodos da classe Repository e tem acesso aos 
 >Nota aqui sempre  retornado uma Promise!
 
 ### Controladores
-Controladores servem para prover ações/validações/tratamentos para persistência no banco de dados via rotas da API. fornece um controle padrão que pode ser estendida de controller que se encontra em api/config/Controller.js. Em sua construção defina o modelo a ser utilizado pela classe pai(Controller) que lhe estenderá alguns métodos para uso básico e claro que podem ser sobrescritos.
+Controladores servem para prover ações/validações/tratamentos para persistência no banco de dados via rotas da API. fornece um controle padrão que pode ser estendida de controller que se encontra em api/config/controller.js. Em sua construção defina o modelo a ser utilizado pela classe pai(Controller) que lhe estenderá alguns métodos para uso básico e claro que podem ser sobrescritos.
 
 #### Métodos criados ao estender Controller
 Alguns métodos são exportados a classe filha
@@ -121,7 +121,7 @@ Altera os dados recebidos via requisição usando o parâmetro "id" como consult
 #### destroy(req)
 Deleta os dados usando o parâmetro "id"
 
-##### Exemplo de uso da classe api/config/Controller.js
+##### Exemplo de uso da classe api/config/controller.js
 ```
 const Model = require('./model')
 const skelController = require('../../config/Controller')

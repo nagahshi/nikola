@@ -1,5 +1,5 @@
 // require restify to manipulate routes
-const server = require('./config/server')
+const server = require('./config/Server')
 
 /**
  *  FOR REGISTER ROUTER
@@ -8,5 +8,5 @@ const server = require('./config/server')
 
 require('./domains/user').applyRoutes(server)
 
-//listener server at port
+// listener server at port
 server.listen(process.env.API_PORT)

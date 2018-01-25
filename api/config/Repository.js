@@ -1,4 +1,4 @@
-const { connection, errorHandler } = require('./mysql')
+const { connection, errorHandler } = require('./Mysql')
 
 /**
  * @description {PRIVATE} prepare where statement
@@ -7,18 +7,18 @@ const { connection, errorHandler } = require('./mysql')
  */
 let prepareWhere = (iC) => {
   let where = ``
-  if(iC.arrWhere.length || iC.arrWhereOr.length){
-    if(iC.arrWhere.length && iC.arrWhereOr.length){
+  if (iC.arrWhere.length || iC.arrWhereOr.length) {
+    if (iC.arrWhere.length && iC.arrWhereOr.length) {
       where = ` WHERE (${iC.arrWhere.join(' AND ')}) AND (${iC.arrWhereOr.join(' OR ')})`
-    }else{
-      if(iC.arrWhere.length){
+    } else {
+      if (iC.arrWhere.length) {
         where = ` WHERE ${iC.arrWhere.join(' AND ')}`
-      }else{
+      } else {
         where = ` WHERE ${iC.arrWhereOr.join(' OR ')}`
       }
     }
   }
-  return where;
+  return where
 }
 
 /**
@@ -27,7 +27,7 @@ let prepareWhere = (iC) => {
  * @param fieldsToUpdate - fields to update
  * @returns {string[]} - array with query
  */
-let prepareFieldsToUpdate = (mappedFields,fieldsToUpdate) => Object.keys(fieldsToUpdate)
+let prepareFieldsToUpdate = (mappedFields, fieldsToUpdate) => Object.keys(fieldsToUpdate)
   .filter(key => mappedFields.includes(key))
   .map(key => `${key} = ${connection.escape(fieldsToUpdate[key])}`)
 
@@ -37,7 +37,7 @@ let prepareFieldsToUpdate = (mappedFields,fieldsToUpdate) => Object.keys(fieldsT
  * @param fieldsToSave - fields to insert
  * @returns {string[]} -
  */
-let prepareFieldsToSave = (mappedFields,fieldsToSave) => Object.keys(fieldsToSave)
+let prepareFieldsToSave = (mappedFields, fieldsToSave) => Object.keys(fieldsToSave)
   .filter(key => mappedFields.includes(key))
   .map(key => key)
 
@@ -47,7 +47,7 @@ let prepareFieldsToSave = (mappedFields,fieldsToSave) => Object.keys(fieldsToSav
  * @param fieldsToSave values to insert
  * @returns {any[]}
  */
-let prepareValuesToSave = (mappedFields,fieldsToSave) => Object.keys(fieldsToSave)
+let prepareValuesToSave = (mappedFields, fieldsToSave) => Object.keys(fieldsToSave)
   .filter(key => mappedFields.includes(key))
   .map(key => connection.escape(fieldsToSave[key]))
 
@@ -57,8 +57,9 @@ let prepareValuesToSave = (mappedFields,fieldsToSave) => Object.keys(fieldsToSav
  * @param fieldsToSave values to insert
  * @returns {string}
  */
-let makeQueryToSave = (mappedFields,fieldsToSave) => {
-  let fields = prepareFieldsToSave(mappedFields,fieldsToSave), values = prepareValuesToSave(mappedFields,fieldsToSave)
+let makeQueryToSave = (mappedFields, fieldsToSave) => {
+  let fields = prepareFieldsToSave(mappedFields, fieldsToSave)
+  let values = prepareValuesToSave(mappedFields, fieldsToSave)
   return `(${fields.join(',')}) VALUES(${values.join(',')})`
 }
 
@@ -69,8 +70,8 @@ let makeQueryToSave = (mappedFields,fieldsToSave) => {
  * @returns {string}
  */
 let handlerMsg = (err, defaultMsg) => {
-  if(err.hasOwnProperty('errno')){
-    switch(err.errno) {
+  if (err.hasOwnProperty('errno')) {
+    switch (err.errno) {
       case 1062:
         return `Registro não pode entrar duplicado no banco de dados`
       case 1054:
@@ -91,16 +92,16 @@ let handlerMsg = (err, defaultMsg) => {
  */
 let isValid = (table, validates, data) => Object.keys(validates)
   .map((key) => {
-    let keyErr  = new Object()
-    keyErr[key] = new Object()
+    let keyErr = {}
+    keyErr[key] = {}
 
-    if(validates[key].hasOwnProperty('required') && !data.hasOwnProperty(key)){
+    if (validates[key].hasOwnProperty('required') && !data.hasOwnProperty(key)) {
       keyErr[key]['required'] = `Error ${key} is required`
     } else {
-      if(validates[key].hasOwnProperty('min') && data[key].length <= validates[key].min){
+      if (validates[key].hasOwnProperty('min') && data[key].length <= validates[key].min) {
         keyErr[key]['min'] = `Error ${key} min length is ${validates[key].min}`
       }
-      if(validates[key].hasOwnProperty('max') && data[key].length >= validates[key].max){
+      if (validates[key].hasOwnProperty('max') && data[key].length >= validates[key].max) {
         keyErr[key]['max'] = `Error ${key} max length is ${validates[key].max}`
       }
     }
@@ -128,7 +129,7 @@ class Repository {
    */
   constructor (table = '', name = '', validates = {}) {
     this.table = table
-    this.name = (name)?name:table
+    this.name = name || table
     this.fields = Object.keys(validates)
     this.qSelect = `SELECT ${this.fields.map((f) => `${table}.${f}`).join(',')} FROM ${table} as ${table}`
     this.arrWhere = []
@@ -141,14 +142,14 @@ class Repository {
    * @description return Promise with query to select all registers
    * @returns {Promise<any>}
    */
-  all(){
+  all () {
     return new Promise((resolve, reject) => {
       connection.query(`SELECT * FROM ${this.table}`, (error, results) => {
-        if(error) {
-          errorHandler(error,'Falha ao listar categorias',reject)
+        if (error) {
+          errorHandler(error, 'Falha ao listar categorias', reject)
           return false
         } else {
-          resolve({categories : results})
+          resolve({categories: results})
         }
       })
     })
@@ -161,8 +162,8 @@ class Repository {
    * @param {string|number} value - value to search in where
    * @returns {Repository} - return self
    */
-  where(field,operator,value){
-    if(typeof value === 'number' || typeof value === 'string') {
+  where (field, operator, value) {
+    if (typeof value === 'number' || typeof value === 'string') {
       this.arrWhere.push(`${this.table}.${field} ${operator} ${connection.escape(value)}`)
     }
     return this
@@ -175,8 +176,8 @@ class Repository {
    * @param {string|number} value - value to search in where
    * @returns {Repository} - return self
    */
-  whereOr(field,operator,value){
-    if(typeof value === 'number' || typeof value === 'string' || (typeof value === 'object' && value === null)) {
+  whereOr (field, operator, value) {
+    if (typeof value === 'number' || typeof value === 'string' || (typeof value === 'object' && value === null)) {
       this.arrWhereOr.push(`${field} ${operator} ${connection.escape(value)}`)
     }
     return this
@@ -187,7 +188,7 @@ class Repository {
    * @param {string} string - query where
    * @returns {Repository} - return self
    */
-  whereRaw(string){
+  whereRaw (string) {
     this.arrWhere.push(` ${string} `)
     return this
   }
@@ -197,29 +198,33 @@ class Repository {
    * @param {number} page - pagination
    * @returns {Promise<any>}
    */
-  get(page){
+  get (page) {
     page = parseInt(page)
     return new Promise((resolve, reject) => {
       connection.query(`SELECT COUNT(*) as count FROM ${this.table} ${prepareWhere(this)}`, (error, results) => {
+        if (error) {
+          errorHandler(error, `Falha ao buscar a ${this.name}`, reject)
+          return false
+        }
 
         let count = results[0].count
         let lastLimit = (page * 10)
-        let firstLimit = (lastLimit-10)
-        let lastPage = (count <= 10)?1:(Math.ceil(count/10))
+        let firstLimit = (lastLimit - 10)
+        let lastPage = (count <= 10) ? 1 : (Math.ceil(count / 10))
 
         let queryString = `${this.qSelect} ${this.arrJoin.join('')} ${prepareWhere(this)} LIMIT ${firstLimit},${lastLimit}`
 
-        if (page <= lastPage){
+        if (page <= lastPage) {
           connection.query(queryString, (error, results) => {
-            if(error) {
-              errorHandler(error,`Falha ao buscar a ${this.name}`,reject)
+            if (error) {
+              errorHandler(error, `Falha ao buscar a ${this.name}`, reject)
               return false
             } else {
               let data = [...results]
               resolve({count, current: page, next: (page += 1), lastPage, data})
             }
           })
-        }else {
+        } else {
           resolve({count, current: page, lastPage, data: []})
         }
       })
@@ -231,7 +236,7 @@ class Repository {
    * @param {string[]} fields - fields to select
    * @returns {Repository} - return self
    */
-  select(fields = ['*']){
+  select (fields = ['*']) {
     this.qSelect = `SELECT ${fields.map((f) => `${f}`).join(',')} FROM ${this.table} as ${this.table}`
     return this
   }
@@ -243,8 +248,8 @@ class Repository {
    * @param {string} local - name field local ex. table_join.id
    * @returns {Repository} - return self
    */
-  join(table,foreing,local){
-    this.arrJoin.push((table && foreing && local)?`join ${table} ${table} on ${this.table}.${foreing} = ${table}.${local}`:'')
+  join (table, foreing, local) {
+    this.arrJoin.push((table && foreing && local) ? `join ${table} ${table} on ${this.table}.${foreing} = ${table}.${local}` : '')
     return this
   }
 
@@ -252,12 +257,12 @@ class Repository {
    * @description endpoint to get a first result
    * @returns {Promise<any>}
    */
-  first(){
+  first () {
     return new Promise((resolve, reject) => {
       let queryString = `${this.qSelect} ${this.arrJoin.join('')} ${prepareWhere(this)} LIMIT 0,1`
       connection.query(queryString, (error, results) => {
-        if(error) {
-          errorHandler(error,`Falha ao buscar a ${this.name}:${id}`,reject)
+        if (error) {
+          errorHandler(error, `Falha ao buscar a ${this.name}`, reject)
           return false
         } else {
           resolve(...results)
@@ -270,7 +275,7 @@ class Repository {
    * @description endpoint to get query
    * @returns {Promise<any>}
    */
-  toSql(){
+  toSql () {
     return new Promise((resolve) => {
       resolve(`${this.qSelect} ${this.arrJoin.join('')} ${prepareWhere(this)}`)
     })
@@ -281,28 +286,25 @@ class Repository {
    * @param {string[]} fieldsToUpdate - array with fields and values to be updated
    * @returns {Promise<any>}
    */
-  update(fieldsToUpdate = []){
+  update (fieldsToUpdate = []) {
     return new Promise((resolve, reject) => {
-
-      isValid(this.validates,fieldsToSave).then(err => {
-        if(!err){
+      isValid(this.validates, fieldsToUpdate).then(err => {
+        if (!err) {
           let queryString = `UPDATE ${this.table} SET ${prepareFieldsToUpdate(this.fields, fieldsToUpdate).join(', ')} ${prepareWhere(this)}`
 
           connection.query(queryString, (error, results) => {
-            if(error) {
-              errorHandler(error,handlerMsg(error,`Falha ao alterear ${this.name}`),reject)
+            if (error) {
+              errorHandler(error, handlerMsg(error, `Falha ao alterear ${this.name}`), reject)
               return false
             } else {
               resolve({affectedRows: results.affectedRows})
             }
           })
-
         } else {
-          errorHandler(error,`Falha ao alterar ${this.name}`,reject)
+          errorHandler(err, `Falha ao alterar ${this.name}`, reject)
           return false
         }
       })
-
     })
   }
 
@@ -310,12 +312,12 @@ class Repository {
    * @description endpoint to delete query
    * @returns {Promise<any>}
    */
-  delete(){
+  delete () {
     return new Promise((resolve, reject) => {
       let queryString = `DELETE FROM ${this.table} ${prepareWhere(this)}`
       connection.query(queryString, (error, results) => {
-        if(error) {
-          errorHandler(error,`Falha ao remover ${this.name}`,reject)
+        if (error) {
+          errorHandler(error, `Falha ao remover ${this.name}`, reject)
           return false
         } else {
           resolve({affectedRows: results.affectedRows})
@@ -329,31 +331,48 @@ class Repository {
    * @param {string[]} fieldsToSave - array with fields and values to be INSERTED
    * @returns {Promise<any>}
    */
-  store(fieldsToSave = []){
+  store (fieldsToSave = []) {
     return new Promise((resolve, reject) => {
       try {
         let err = isValid(this.table, this.validates, fieldsToSave)
-        if(!err.length){
+        if (!err.length) {
           let queryString = `INSERT INTO ${this.table} ${makeQueryToSave(this.fields, fieldsToSave)}`
           connection.query(queryString, (error, results) => {
-            if(error) {
-              errorHandler(error, handlerMsg(error,`Falha ao salvar ${this.name}`), reject)
+            if (error) {
+              errorHandler(error, handlerMsg(error, `Falha ao salvar ${this.name}`), reject)
               return false
             } else {
               resolve({insertId: results.insertId})
             }
           })
         } else {
-          errorHandler({},err,reject)
+          errorHandler({}, err, reject)
           return false
         }
       } catch (err) {
-        errorHandler({},err,reject)
+        errorHandler({}, err, reject)
         return false
       }
     })
   }
 
+  /**
+   * @description run a raw query. take be careful!
+   * @param {string} query
+   * @returns {Promise<any>}
+   */
+  query (query) {
+    return new Promise((resolve, reject) => {
+      connection.query(query, (error, results) => {
+        if (error) {
+          errorHandler(error, `Falha ao executar query em ${this.name}`, reject)
+          return false
+        } else {
+          resolve({results})
+        }
+      })
+    })
+  }
 }
 
 module.exports = Repository
