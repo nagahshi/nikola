@@ -97,6 +97,7 @@ Após instanciado o modelo adota métodos da classe Repository e tem acesso aos 
 * update(campos) - recebe um array com os campos a serem alterados e executa essa ação em SQL
 * delete() - executa DELETE após o preparo da consulta
 * store(campos) - recebe um array com os objetos, os dados são salvos com método INSERT
+* query(query) - consulta completa por query crua
 >Nota aqui sempre  retornado uma Promise!
 
 ### Controladores
