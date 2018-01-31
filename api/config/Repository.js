@@ -98,10 +98,10 @@ let isValid = (table, validates, data) => Object.keys(validates)
     if (validates[key].hasOwnProperty('required') && !data.hasOwnProperty(key)) {
       keyErr[key]['required'] = `Error ${key} is required`
     } else {
-      if (validates[key].hasOwnProperty('min') && data[key].length <= validates[key].min) {
+      if (validates[key].hasOwnProperty('min') && data[key].length < validates[key].min) {
         keyErr[key]['min'] = `Error ${key} min length is ${validates[key].min}`
       }
-      if (validates[key].hasOwnProperty('max') && data[key].length >= validates[key].max) {
+      if (validates[key].hasOwnProperty('max') && data[key].length > validates[key].max) {
         keyErr[key]['max'] = `Error ${key} max length is ${validates[key].max}`
       }
     }
