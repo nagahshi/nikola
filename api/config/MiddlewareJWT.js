@@ -2,7 +2,7 @@ const jwt = require('jsonwebtoken')
 
 const jwtMiddleware = (deps) => {
   return async (req, res, next) => {
-    if (!deps.exclusions.includes(req.href())) {
+    if (!deps.exclusions.includes(req.path())) {
       let token = req.headers['x-access-token']
       if (!token) {
         res.send(403, {error: 'Token não encontrado'})
