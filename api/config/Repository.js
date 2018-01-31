@@ -286,23 +286,15 @@ class Repository {
    * @param {string[]} fieldsToUpdate - array with fields and values to be updated
    * @returns {Promise<any>}
    */
-  update (fieldsToUpdate = []) {
+  update (fieldsToUpdate = {}) {
     return new Promise((resolve, reject) => {
-      isValid(this.validates, fieldsToUpdate).then(err => {
-        if (!err) {
-          let queryString = `UPDATE ${this.table} SET ${prepareFieldsToUpdate(this.fields, fieldsToUpdate).join(', ')} ${prepareWhere(this)}`
-
-          connection.query(queryString, (error, results) => {
-            if (error) {
-              errorHandler(error, handlerMsg(error, `Falha ao alterear ${this.name}`), reject)
-              return false
-            } else {
-              resolve({affectedRows: results.affectedRows})
-            }
-          })
-        } else {
-          errorHandler(err, `Falha ao alterar ${this.name}`, reject)
+      let queryString = `UPDATE ${this.table} SET ${prepareFieldsToUpdate(this.fields, fieldsToUpdate).join(', ')} ${prepareWhere(this)}`
+      connection.query(queryString, (error, results) => {
+        if (error) {
+          errorHandler(error, handlerMsg(error, `Falha ao alterear ${this.name}`), reject)
           return false
+        } else {
+          resolve({affectedRows: results.affectedRows})
         }
       })
     })
@@ -331,7 +323,7 @@ class Repository {
    * @param {string[]} fieldsToSave - array with fields and values to be INSERTED
    * @returns {Promise<any>}
    */
-  store (fieldsToSave = []) {
+  store (fieldsToSave = {}) {
     return new Promise((resolve, reject) => {
       try {
         let err = isValid(this.table, this.validates, fieldsToSave)
