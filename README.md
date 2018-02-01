@@ -21,6 +21,11 @@ MYSQL_PASSWORD=root #sua senha para acesso ao banco de dados
 MYSQL_DATABASE=database #nome de seu banco de dados
 
 RESTIFY_NON_BLOCK=['/auth/login','/auth/register'] #Rotas que não serão bloqueadas pelo middleware de JWT
+
+MAILER_HOST=localhost #Host do servidor de email
+MAILER_PORT=25 #Porta do servidor
+MAILER_USER=user@user.com #Usuário ou email
+MAILER_PASSWORD=secret #Senha do usuário
 ```
 >Nota: Ainda não possuímos um sistema de migração de dados portanto seu banco de dados deve estar pronto.
 
@@ -141,4 +146,21 @@ Para criar um token de autenticação use a biblioteca auth em api/config/auth.j
 ```
 // após importá-la use auth e passe seu objeto para criação de seu token
 auth({email, telefone, id})
+```
+### Mailer 
+Utilizamos a biblioteca nodemailer para envio de emails.
+Para enviar um email use a biblioteca Mailer em api/config/Mailer.js
+```
+// após importá-la, instancie e use o método send com alguns parametros
+send (from, to, subject, html, text)
+```
+#### Envio com HTML personalizado
+Para elaborar um email com html personalizado é possivel ainda utilizar a biblioteca [handlebarsjs](http://handlebarsjs.com/)
+veja o modelo de envio com html personalizado.
+```
+let template = hb.compile(fs.readFileSync(`${__dirname}/templates/register.tpl`, 'utf8'))
+let data = {token: `${url}/${token}`}
+let mailer = new Mailer()
+
+mailer.send('<teste> teste@teste', email, 'Bem vindo', template(data), '')
 ```
